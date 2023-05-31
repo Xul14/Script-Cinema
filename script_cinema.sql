@@ -1020,7 +1020,215 @@ select ucase(tbl_filme.nome) as nome,
        concat(substr(tbl_filme.sinopse, 1, 50), '... Leia mais') as sinopse_reduzida
 from tbl_filme;
 
-### Aula 24
+####################################### CÁLCULOS E OPERAÇÕES ##############################################
+
+alter table tbl_filme add column valor_unitario float;
+
+update tbl_filme set valor_unitario = 43.50 where id = 1;
+update tbl_filme set valor_unitario = 37.80 where id = 2;
+update tbl_filme set valor_unitario = 50.10 where id = 4;
+update tbl_filme set valor_unitario = 39.00 where id = 6;
+
+select * from tbl_filme;
+
+## CÁLCULOS
+select min(valor_unitario) as minimo from tbl_filme;
+select max(valor_unitario) as maximo from tbl_filme;
+select round(avg(valor_unitario),2) as media from tbl_filme;
+select round(sum(valor_unitario), 2)as total from tbl_filme;
+
+## OPERAÇÕES
+select tbl_filme.nome, tbl_filme.foto_capa, tbl_filme.valor_unitario ,
+	   round((tbl_filme.valor_unitario - ((tbl_filme.valor_unitario * 10)/ 100)), 2) as valor_desconto
+from tbl_filme;
+
+select tbl_filme.nome, tbl_filme.foto_capa, 
+	  concat("R$ ", tbl_filme.valor_unitario) as valor_unitario ,
+	  concat("R$ ", round((tbl_filme.valor_unitario - ((tbl_filme.valor_unitario * 10)/ 100)), 2)) as valor_desconto
+from tbl_filme;
+
+## OPERADORES DE COMPARAÇÃO
+# = -> IGUAL
+# < -> MENOR
+# > -> MAIOR
+# <= -> MENOR OU IGUAL
+# >= -> MAIOR OU IGUAL
+# <> -> DIFERENTE
+# LIKE 
+# IS 
+
+## OPERADORES LÓGICOS
+# AND
+# OR
+# NOT
+
+## Apenas trocar o operador
+select  tbl_filme.nome, tbl_filme.foto_capa, tbl_filme.valor_unitario
+from tbl_filme
+where tbl_filme.valor_unitario >= 40
+order by tbl_filme.valor_unitario desc;
+
+select  tbl_filme.nome, tbl_filme.foto_capa, tbl_filme.valor_unitario
+from tbl_filme
+where tbl_filme.valor_unitario <> 40 or tbl_filme.valor_unitario is null ;
+
+# Between - retorna os regirtros entre dois valores
+select  tbl_filme.nome, tbl_filme.valor_unitario from tbl_filme
+where tbl_filme.valor_unitario between 40 and 50;
+
+# Not between - retorna os regirtros que não estão entre dois valores
+select  tbl_filme.nome, tbl_filme.valor_unitario from tbl_filme
+where tbl_filme.valor_unitario not between 40 and 50;
+
+select * from tbl_filme where tbl_filme.valor_unitario like '%43.5%';
+
+select * from tbl_filme;
+
+########################### DATA E HORA #####################################
+
+##Data atual
+select curdate() as data_atual;
+select current_date() as data_atual;
+
+
+##Hora atual
+select current_time() as hora_atual;
+select curtime() as hora_atual;
+
+##Data e hora
+select current_timestamp() as data_hora_atual;
+
+##Foramatação data e hora
+select time_format(curtime(), '%H') as hora_formatada;		#Somente a hora de 00 a 23
+select time_format(curtime(), '%h') as hora_formatada;		#Somente a hora de 00 a 12
+select time_format(curtime(), '%i') as hora_formatada;      #Retorna o minuto
+select time_format(curtime(), '%s') as hora_formatada;      #Retorna o segundo
+select time_format(curtime(), '%H:%i') as hora_formatada;   #Retorna hora e minuto
+select time_format(curtime(), '%r') as hora_formatada;      # Padrão AM/PM
+select time_format(curtime(), '%T') as hora_formatada;      # Retorna hora, minuto e segundo
+
+##Hora, minuto e segundo separadamente
+select hour(curtime()) as hora_formatada;
+select minute(curtime()) as hora_formatada;
+select second(curtime()) as hora_formatada;
+
+##Formatando Data
+select date_format(curdate(), '%d') as data_formatada;  #Retorna o dia
+select date_format(curdate(), '%m') as data_formatada;  #Retorna o mês
+select date_format(curdate(), '%M') as data_formatada;  #Retorna o nome do mês
+select date_format(curdate(), '%b') as data_formatada;  #Retorna o nome do mês abreviado
+select date_format(curdate(), '%y') as data_formatada;  #Retorna os ultimos digitos do ano
+select date_format(curdate(), '%Y') as data_formatada;  #Retorna o ano por extenso
+select date_format(curdate(), '%w') as data_formatada;  #Retorna o dia da semana
+select date_format(curdate(), '%W') as data_formatada;  #Retorna o nome do dia da semana
+
+select day(curdate()) as data_formatada; 		 #Retorna dia do ano
+select month(curdate()) as data_formatada;  	 #Retorna mês do ano
+select year(curdate()) as data_formatada;  		 #Retorna o ano
+select dayname(curdate()) as data_formatada; 	 #Retorna o dia da semana
+select dayofmonth(curdate()) as data_formatada;  #Retorna o dia do mês
+select dayofyear(curdate()) as data_formatada;   #Retorna o dia do ano
+select dayofweek(curdate()) as data_formatada;   #Retorna o dia da semana sequêncial
+select monthname(curdate()) as data_formatada;   #Retorna o nome do mês
+select yearweek(curdate()) as data_formatada;    #Retorna o ano e a semana do ano
+select weekofyear(curdate()) as data_formatada;  #Retorna a semana do ano
+
+select date_format(curdate(), '%d/%m/%Y') as data_formatada_br;
+select date_format(str_to_date( '05/07/2020', '%d/%m/%Y'), '%Y-%m-%d') as data_universal;
+
+##Diferença de datas
+
+select datediff('2023-05-24', '2023-05-01') as qtde_dias;
+select (datediff('2023-05-24', '2023-05-01')* 5) as valor_pagar;
+
+##Diferença e soma entre horas
+select timediff('16:16:19', '16:15:00') as valor_pagar;
+select addtime('16:16:19', '1:00:00') as valor_pagar;
+select addtime(timediff('16:16:19', '00:20:00'), '01:00:00') as novo;
+
+## Criptografia
+select 'senai' as dados,
+	md5('Senai') as dados_cripto,
+	sha('Senai') as dados_cripto,
+	sha2('Senai', 512) as dados_cripto;
+    
+################################# RELACIONAMENTO ENTRE TABELAS #################################
+    
+############## WHERE ##############
+
+#Exemplo 01
+select tbl_ator.nome, tbl_ator.data_nascimento,
+	   tbl_sexo.sigla
+from tbl_ator, tbl_sexo
+where tbl_sexo.id = tbl_ator.id_sexo
+	;
+
+#Exemplo 02
+select tbl_ator.nome, tbl_ator.foto, tbl_ator.biografia,
+	   tbl_sexo.sigla, tbl_sexo.nome,
+       tbl_nacionalidade.nome
+       
+from tbl_ator, tbl_sexo, tbl_ator_nacionalidade, tbl_nacionalidade
+
+where tbl_sexo.id = tbl_ator.id_sexo and 
+	  tbl_ator.id = tbl_ator_nacionalidade.id_ator and
+      tbl_nacionalidade.id = tbl_ator_nacionalidade.id_nacionalidade
+order by tbl_ator.nome;
+
+############## FROM ##############
+
+#Exemplo 01
+select tbl_ator.nome, tbl_ator.data_nascimento,
+	   tbl_sexo.sigla
+	from tbl_ator
+		inner join tbl_sexo
+			on tbl_sexo.id = tbl_ator.id_sexo
+	;
+    
+    #Exemplo 02
+select tbl_ator.nome, tbl_ator.foto, tbl_ator.biografia,
+	   tbl_sexo.sigla, tbl_sexo.nome,
+       tbl_nacionalidade.nome
+       
+	from tbl_ator
+		inner join tbl_sexo
+			on tbl_sexo.id = tbl_ator.id_sexo 
+		inner join tbl_ator_nacionalidade 
+			on tbl_ator.id = tbl_ator_nacionalidade.id_ator 
+        inner join tbl_nacionalidade 
+			on  tbl_nacionalidade.id = tbl_ator_nacionalidade.id_nacionalidade;
+
+desc tbl_ator;
+desc tbl_genero;
+desc tbl_nacionalidade;
+desc tbl_filme;
+######### EXERCICIO #########
+select tbl_filme.nome as nome_filme, tbl_filme.data_lancamento as data_lancamento, tbl_filme.sinopse as sinopse,
+	   tbl_genero.nome as genero_filme,
+       tbl_ator.nome as nome_ator, tbl_ator.biografia as biografia_ator,
+       tbl_nacionalidade.nome as nacionalidade_ator,
+       tbl_sexo.nome as sexo_ator
+       
+	from tbl_filme
+		inner join tbl_filme_genero
+			on tbl_filme.id = tbl_filme_genero.id_filme
+		inner join tbl_genero
+			on tbl_genero.id = tbl_filme_genero.id_genero
+		inner join tbl_filme_ator
+			on tbl_filme.id = tbl_filme_ator.id_filme
+		inner join tbl_ator
+			on tbl_ator.id = tbl_filme_ator.id_ator
+		inner join tbl_sexo
+			on tbl_sexo.id = tbl_ator.id_sexo
+		inner join tbl_ator_nacionalidade
+			on tbl_ator.id = tbl_ator_nacionalidade.id_ator
+		inner join tbl_nacionalidade
+			on tbl_nacionalidade.id = tbl_ator_nacionalidade.id_nacionalidade
+	order by tbl_filme.nome, tbl_ator.nome;
+
+
+
+
 
 
 
