@@ -1153,7 +1153,7 @@ select 'senai' as dados,
 	sha2('Senai', 512) as dados_cripto;
     
 ################################# RELACIONAMENTO ENTRE TABELAS #################################
-    
+    use db_videolocadora_tarde_20231;
 ############## WHERE ##############
 
 #Exemplo 01
@@ -1226,9 +1226,106 @@ select tbl_filme.nome as nome_filme, tbl_filme.data_lancamento as data_lancament
 			on tbl_nacionalidade.id = tbl_ator_nacionalidade.id_nacionalidade
 	order by tbl_filme.nome, tbl_ator.nome;
 
+insert into tbl_classificacao(sigla, nome, descricao) values('NA', 'Não Aplicavél', 'Não aplicavél a nenhum filme');
+insert into tbl_filme ( nome,
+						nome_original,
+                        data_lancamento,
+                        data_relancamento,
+                        duracao,
+                        foto_capa,
+                        sinopse,
+                        id_classificacao,
+                        valor_unitario
+                        ) values (
+                        'A Lista de Schindler',
+                        'Schindlers List',
+                        '1993-12-31',
+                        '2019-03-01',
+                        '03:15:00',
+                        'https://br.web.img3.acsta.net/c_310_420/pictures/19/04/10/19/44/2904073.jpg',
+                        'A inusitada história de Oskar Schindler (Liam Neeson), um sujeito oportunista, sedutor, "armador", simpático, comerciante no mercado negro, mas, acima de tudo, um homem que se relacionava muito bem com o regime nazista, tanto que era membro do próprio Partido Nazista (o que não o impediu de ser preso algumas vezes, mas sempre o libertavam rapidamente, em razão dos seus contatos). No entanto, apesar dos seus defeitos, ele amava o ser humano e assim fez o impossível, a ponto de perder a sua fortuna mas conseguir salvar mais de mil judeus dos campos de concentração.',
+                        '11',
+                        '29.90'
+                        );
+                        
+insert into tbl_genero(nome)values('Histórico');
+insert into tbl_genero(nome)values('Guerra');
+                        
+select * from tbl_genero;
+select * from tbl_filme;
 
+select tbl_filme.nome as nome_filme, tbl_classificacao.nome as nome_classifcacao
+	from tbl_filme
+		inner join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao;
+            
+select tbl_filme.nome as nome_filme, tbl_genero.nome as nome_genero
+	from tbl_filme
+		inner join tbl_filme_genero
+			on tbl_filme.id = tbl_filme_genero.id_filme
+		inner join tbl_genero
+			on tbl_genero.id = tbl_filme_genero.id_genero;
 
+### LEFT JOIN
 
+select tbl_filme.nome as nome_filme, tbl_classificacao.nome as nome_classifcacao
+	from tbl_filme
+		left join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao;
+            
+select tbl_filme.nome as nome_filme, tbl_genero.nome as nome_genero, tbl_classificacao.nome as nome_classificacao
+	from tbl_filme
+		left join tbl_filme_genero
+			on tbl_filme.id = tbl_filme_genero.id_filme
+		left join tbl_genero
+			on tbl_genero.id = tbl_filme_genero.id_genero
+		inner join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao;
+            
+
+### RIGHT JOIN
+
+select tbl_filme.nome as nome_filme, tbl_classificacao.nome as nome_classifcacao
+	from tbl_filme
+		right join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao
+    order by tbl_filme.nome;
+    
+select tbl_filme.nome as nome_filme, tbl_genero.nome as nome_genero, tbl_classificacao.nome as nome_classificacao
+	from tbl_filme
+		right join tbl_filme_genero
+			on tbl_filme.id = tbl_filme_genero.id_filme
+		right join tbl_genero
+			on tbl_genero.id = tbl_filme_genero.id_genero
+		left join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao;
+
+## FULL JOIN
+select tbl_filme.nome as nome_filme, tbl_filme.data_lancamento,
+	   tbl_genero.nome as nome_genero, 
+       tbl_classificacao.nome as nome_classificacao
+	from tbl_filme
+		left join tbl_filme_genero
+			on tbl_filme.id = tbl_filme_genero.id_filme
+		left join tbl_genero
+			on tbl_genero.id = tbl_filme_genero.id_genero
+		inner join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao
+            
+union distinct
+
+select tbl_filme.nome as nome_filme, tbl_filme.data_lancamento,
+	   tbl_genero.nome as nome_genero, 
+       tbl_classificacao.nome as nome_classificacao
+	from tbl_filme
+		right join tbl_filme_genero
+			on tbl_filme.id = tbl_filme_genero.id_filme
+		right join tbl_genero
+			on tbl_genero.id = tbl_filme_genero.id_genero
+		left join tbl_classificacao
+			on tbl_classificacao.id = tbl_filme.id_classificacao
+            
+;
 
 
 
